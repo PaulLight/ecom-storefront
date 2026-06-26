@@ -1,6 +1,7 @@
 import type { Product } from '@/types/products'
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import AddToCartButton from '@/components/AddToCartButton'
 
 interface ProductPageProps {
     params: Promise<{ id: string}>
@@ -45,6 +46,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <p>{product.description}</p>
                 <p>Category: {product.category}</p>
                 <p>Rating: {product.rating.rate} ({product.rating.count} reviews)</p>
+                <AddToCartButton product={product} />
             </div>
         </div>
     )
