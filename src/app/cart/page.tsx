@@ -1,13 +1,17 @@
 "use client";
 
-import useCart from "@/context/useCart";
+import { removeItem } from "@/store/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 function CartPage() {
-    const { items, removeItem } = useCart();
+    const dispatch = useAppDispatch();
+    const items = useAppSelector(state => state.cart.items);
     
     if (items.length === 0) { 
         return <p style={{ padding: "2rem" }}>Your cart is empty.</p>;
     }
+
+    console.log(items);
 
     return (
         <div style={{ padding: "2rem" }}>
@@ -18,7 +22,7 @@ function CartPage() {
                     <p>{item.title}</p>
                     <p>Qty: {item.quantity}</p>
                     <p>${(item.price * item.quantity).toFixed(2)}</p>
-                    <button onClick={() => removeItem(item.id)}>Remove</button>
+                    <button onClick={() => dispatch(removeItem(item.id))}>Remove</button>
                 </div>
             ))}
       </div>

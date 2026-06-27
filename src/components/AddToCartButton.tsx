@@ -1,18 +1,15 @@
 "use client";
 
-import useCart from '@/context/useCart'
-import type { Product } from '@/types/products'
+import { useAppDispatch } from "@/store/hooks";
+import { addItem } from "@/store/cartSlice";
+import type { Product } from "@/types/products";
 
-function AddToCartButton({ product } : { product: Product}) {
-    const { addItem } = useCart() 
-    return (
-        <button type="button" onClick={() => {
-            console.log(product)
-            addItem(product)
-        }}>
-            Add to Cart
-        </button>
-    )
+export default function AddToCartButton({ product }: { product: Product }) {
+  const dispatch = useAppDispatch();
+
+  return (
+    <button type="button" onClick={() => dispatch(addItem(product))}>
+      Add to Cart
+    </button>
+  );
 }
-
-export default AddToCartButton;
