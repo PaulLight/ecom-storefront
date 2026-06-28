@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { removeItem } from "@/store/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
@@ -10,8 +11,6 @@ function CartPage() {
     if (items.length === 0) { 
         return <p style={{ padding: "2rem" }}>Your cart is empty.</p>;
     }
-
-    console.log(items);
 
     return (
         <div style={{ padding: "2rem" }}>
@@ -25,6 +24,7 @@ function CartPage() {
                     <button onClick={() => dispatch(removeItem(item.id))}>Remove</button>
                 </div>
             ))}
+            <Link href="/checkout">Checkout</Link>
       </div>
     )
 }
