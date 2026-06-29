@@ -12,7 +12,7 @@ async function getProduct(id: string): Promise<Product> {
     const { data, error } = await supabase
         .from('products')
         .select('*')
-        .eq('id', id)
+        .eq('id', Number(id))
         .single();
 
     if (error) {
