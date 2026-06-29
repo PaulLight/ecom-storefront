@@ -33,15 +33,14 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <StoreProvider>
-          <OnlineUsersCount />
           <nav style={{ padding: "1rem", borderBottom: "1px solid #ddd" }}>
             <Link href="/">Home</Link>
-            {" | "}
-            <Link href="admin/login">Login</Link>
             {" | "}
             <Link href="/products">Catalog</Link>
             {" | "}
             <Link href="/cart">Cart</Link>
+            {" | "}
+            <Link href="admin/login">Login</Link>
           </nav>
           {children}
         </StoreProvider>
