@@ -2,10 +2,10 @@ import type { Product } from '@/types/products'
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
-export const dynamic = 'force-dynamic';
-
 async function getProducts(): Promise<Product[]> {
-    const response = await fetch(`https://fakestoreapi.com/products`);
+    const response = await fetch('https://fakestoreapi.com/products', {
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ecom-storefront)' }
+    });
 
     if (!response.ok) {
         console.error('FakeStoreAPI fetch failed:', response.status, response.statusText);
