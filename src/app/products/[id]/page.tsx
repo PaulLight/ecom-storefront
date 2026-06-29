@@ -1,6 +1,7 @@
 import type { Product } from '@/types/products'
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { supabase } from '@/lib/supabase';
 import AddToCartButton from '@/components/AddToCartButton'
 
 interface ProductPageProps {
@@ -8,25 +9,18 @@ interface ProductPageProps {
 }
 
 async function getProduct(id: string): Promise<Product> {
-    const response = await fetch(`https://fakestoreapi.com/products/${id}`);
+    const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('id', id)
+        .single();
 
-    if (!response.ok) {
+    if (error) {
+        console.error('Failed to fetch product:', error.message);
         notFound();
     }
 
-    const text = await response.text();
-
-    if (!text) {
-        notFound();
-    }
-
-    const product = JSON.parse(text);
-
-    if (!product) {
-        notFound();
-    }
-
-    return product;
+    return data;
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
