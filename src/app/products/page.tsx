@@ -1,35 +1,26 @@
 import type { Product } from '@/types/products'
 import { notFound } from "next/navigation";
+import { supabase } from '@/lib/supabase';
 import Link from "next/link";
 
 async function getProducts(): Promise<Product[]> {
-    const response = await fetch('https://fakestoreapi.com/products', {
-        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ecom-storefront)' }
-    });
+    const { data, error } = await supabase
+        .from('products')
+        .select('*');
 
-    if (!response.ok) {
-        console.error('FakeStoreAPI fetch failed:', response.status, response.statusText);
+    if (error) {
+        console.error('Failed to fetch products:', error.message);
         notFound();
     }
 
-    const text = await response.text();
-
-    if (!text) {
-        console.error('FakeStoreAPI returned empty body, status was:', response.status);
-        notFound();
-    }
-
-    const products = JSON.parse(text);
-
-    if (!products) {
-        notFound();
-    }
-
-    return products;
+    return data;
 }
 
 export default async function Products() {
-    const products = await getProducts();
+    const products = await getProducts() || [];
+
+    console.log(products);
+    
 
     return (
         <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
@@ -39,13 +30,13 @@ export default async function Products() {
                         <div className='relative' key={product.id} style={{ padding: "2rem" }}>
                             <Link className='absolute w-full h-full' href={`/products/${product.id}`}>
                                 <span className="sr-only">View {product.title}</span>
-                            </Link>
+                            </Link> 
                             <img src={product.image} alt={product.title} width={150} height={150} />
                             <p>{product.title}</p>
                             <p>${product.price}</p>
                             <p className='truncate'>{product.description}</p>
                             <p>Category: {product.category}</p>
-                            <p>Rating: {product.rating.rate} ({product.rating.count} reviews)</p>
+                            <p>Rating: {product.rating_rate} ({product.rating_count} reviews)</p>
                         </div>
                     )
                 })

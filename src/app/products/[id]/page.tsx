@@ -45,9 +45,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <p>${product.price}</p>
                 <p>{product.description}</p>
                 <p>Category: {product.category}</p>
-                <p>Rating: {product.rating.rate} ({product.rating.count} reviews)</p>
+                <p>Rating: {product.rating_rate} ({product.rating_count} reviews)</p>
                 <AddToCartButton product={product} />
-            </div>
+            </div> 
         </div>
     )
 }
