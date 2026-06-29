@@ -8,12 +8,14 @@ async function getProducts(): Promise<Product[]> {
     const response = await fetch(`https://fakestoreapi.com/products`);
 
     if (!response.ok) {
+        console.error('FakeStoreAPI fetch failed:', response.status, response.statusText);
         notFound();
     }
 
     const text = await response.text();
 
     if (!text) {
+        console.error('FakeStoreAPI returned empty body, status was:', response.status);
         notFound();
     }
 
