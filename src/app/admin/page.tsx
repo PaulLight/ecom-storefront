@@ -1,53 +1,26 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
-import type { Order } from '@/types/order'
-import OnlineUsersCount from '@/components/OnlineUsersCount'
+import OnlineUsersCount from '@/components/OnlineUsersCount';
+import { useAdminPage } from '@/hooks/useAdminPage';
 
 export default function AdminPage() {
-    const [checking, setChecking] = useState<boolean>(true);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [orders, setOrders] = useState<Order[]>([]);
-    const router = useRouter();
+    const {
+        orders,
+        error,
+        refetch,
+        isLoading,
+        checking,
+        totalValue,
+        totalOrders
+    } = useAdminPage();
 
-    useEffect(
-        function redirectAfterLoggIn() {
-            supabase.auth.getSession().then(({ data }) => {
-                if (!data.session) {
-                    router.push("/admin/login");
-                } else {
-                    setChecking(false);
-                }
-            });
-    }, [router])
-
-
-    useEffect(
-        function getAllOrders() {
-            if (checking) return;
-
-            supabase
-                .from('orders')
-                .select('*')
-                .order('created_at', { ascending: false })
-                .then(({ data, error }) => {
-                    if (error) {
-                        console.error("Failed to fetch orders:", error.message);
-                    } else {
-                        setOrders(data);
-                    }
-                    setLoading(false);
-                })            
-    }, [checking])
-
-    if (checking || loading) {
+    if (checking || isLoading) {
         return <p style={{ padding: "2rem" }}>Loading...</p>;
     }
-
-    const totalValue = orders.reduce((sum, order) => sum + order.total, 0);
-    const totalOrders = orders.length;
+    
+    if (error) {
+        return <p style={{ padding: "2rem", color: "red" }}>Failed to load orders: {error.message}</p>;
+    }
 
     return (
         <div style={{ padding: "2rem" }}>
@@ -62,7 +35,9 @@ export default function AdminPage() {
               <strong>${totalValue.toFixed(2)}</strong> total revenue
             </div>
           </div>
-    
+          <button onClick={() => refetch()} style={{ margin: "0.5rem 0" }}>
+              Refresh Orders
+          </button>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>
