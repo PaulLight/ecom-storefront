@@ -8,7 +8,7 @@ export default function AddToCartButton({ product }: { product: Product }) {
   const dispatch = useAppDispatch();
 
   return (
-    <button type="button" onClick={() => dispatch(addItem(product))}>
+    <button style={{ cursor: 'pointer' }} type="button" onClick={() => dispatch(addItem(product))}>
       Add to Cart
     </button>
   );

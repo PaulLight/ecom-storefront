@@ -2,23 +2,32 @@
 
 import { supabase } from '@/lib/supabase';
 import { useRouter } from "next/navigation";
-import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+
+const loginWithPassword = async ({ email, password }: { email: string; password: string }) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+        throw new Error(error.message);
+    }
+}
 
 export function useLoginPage() {
     const [password, setPassword] = useState<string>('');
     const [email, setEmail] = useState<string>('');
-    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
-    const handleLogin = async (e: React.SubmitEvent) => {
-        e.preventDefault();
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-        if (error) {
-            setError(error.message);
+    const mutation = useMutation({
+        mutationFn: loginWithPassword,
+        onSuccess: () => {
+            router.push("/admin");
         }
+    });
 
-        router.push("/admin");
+    const handleLogin = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutation.mutate({ email, password });
     }
 
     const updateEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +43,8 @@ export function useLoginPage() {
         updateEmail,
         password,
         updatePassword,
-        error,
-        handleLogin
+        error: mutation.error?.message ?? null,
+        handleLogin,
+        isPending: mutation.isPending,
     }
 }

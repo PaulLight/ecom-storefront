@@ -9,7 +9,8 @@ export default function AdminLoginPage() {
         password,
         updatePassword,
         error,
-        handleLogin
+        handleLogin,
+        isPending
     } = useLoginPage();
 
     return (
@@ -18,7 +19,9 @@ export default function AdminLoginPage() {
             <input type="email" value={email} onChange={updateEmail} placeholder="Email" required />
             <input type="password" value={password} onChange={updatePassword} placeholder="Password" required />
              {error && <p style={{ color: "red" }}>{error}</p>}
-            <button type="submit">Log In</button>
+             <button type="submit" disabled={isPending}>
+                {isPending ? "Logging in..." : "Log In"}
+            </button>
         </form>
     )
 }

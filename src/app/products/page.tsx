@@ -19,9 +19,6 @@ async function getProducts(): Promise<Product[]> {
 export default async function Products() {
     const products = await getProducts() || [];
 
-    console.log(products);
-    
-
     return (
         <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
             {
