@@ -4,6 +4,7 @@ import "./globals.css";
 import Link from "next/link";
 import StoreProvider from "@/store/StoreProvider";
 import QueryProvider from "@/providers/QueryProvider";
+import Navigation from "@/components/Navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,15 +34,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <QueryProvider>
           <StoreProvider>
-            <nav style={{ padding: "1rem", borderBottom: "1px solid #ddd" }}>
-              <Link href="/">Home</Link>
-              {" | "}
-              <Link href="/products">Catalog</Link>
-              {" | "}
-              <Link href="/cart">Cart</Link>
-              {" | "}
-              <Link href="/admin/login">Login</Link>
-            </nav>
+            <Navigation />
             {children}
           </StoreProvider>
         </QueryProvider>
